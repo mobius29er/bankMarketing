@@ -38,7 +38,11 @@ CAT_MONTH = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","
 
 @st.cache_data(show_spinner=False)
 def load_data(file) -> pd.DataFrame:
-    df = pd.read_csv(file, sep=';')
+    # Handle both file paths (string) and uploaded files
+    if isinstance(file, str):
+        df = pd.read_csv(file, sep=';')
+    else:
+        df = pd.read_csv(file, sep=';')
     # Standardize column names just in case
     df.columns = [c.strip() for c in df.columns]
     return df
@@ -157,8 +161,16 @@ st.caption("Upload your dataset, score prospects, explore segments, and get cont
 
 with st.sidebar:
     st.header("1) Upload dataset")
-    file = st.file_uploader("CSV (e.g., bank-additional-full.csv)", type=['csv'])
-    st.markdown("*Note:* The file should use `;` as the separator (UCI format).")
+    
+    # Option to use sample dataset
+    use_sample = st.checkbox("Use sample dataset (UCI Bank Marketing)", value=False)
+    
+    if use_sample:
+        st.info("Using built-in sample dataset")
+        file = "data/bank-additional-full.csv"
+    else:
+        file = st.file_uploader("CSV (e.g., bank-additional-full.csv)", type=['csv'])
+        st.markdown("*Note:* The file should use `;` as the separator (UCI format).")
 
     st.header("2) Train models")
     st.markdown("Classifier: Logistic Regression (no 'duration'). Clustering: KMeans (silhouette).")
@@ -166,10 +178,23 @@ with st.sidebar:
 
 # Load data
 if file is None:
-    st.info("Upload the bank marketing CSV to begin.")
+    st.info("Upload the bank marketing CSV or check 'Use sample dataset' to begin.")
     st.stop()
 
 raw = load_data(file)
+
+# Show dataset info
+if isinstance(file, str):
+    st.success("✅ Using sample UCI Bank Marketing dataset")
+    with st.expander("About the sample dataset"):
+        st.markdown("""
+        **UCI Bank Marketing Dataset**
+        - **Source**: UC Irvine Machine Learning Repository
+        - **Rows**: 41,188 marketing contacts
+        - **Target**: Bank term deposit subscription (yes/no)
+        - **Features**: Customer demographics, contact info, campaign details, economic indicators
+        - **Use Case**: Predict which customers are likely to subscribe to a term deposit
+        """)
 
 # Validate target
 if 'y' not in raw.columns:
