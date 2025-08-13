@@ -1,0 +1,8 @@
+# Alternative requirements file without version pinning
+# Use this if the main requirements.txt causes version conflicts during deployment
+
+streamlit
+scikit-learn
+pandas
+numpy
+scipy
