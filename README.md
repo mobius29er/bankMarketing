@@ -6,6 +6,7 @@ https://github.com/mobius29er/bankMarketing/blob/main/bankMarketing.ipynb
 
 
 This repo includes a Streamlit app that trains a model, assigns clusters, builds A–D tiers, and provides a simple calculator so a rep can key in a client profile and get the best channel and timing.
+https://bankiq.streamlit.app/
 
 ---
 
