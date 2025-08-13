@@ -1,7 +1,10 @@
 # Bank Marketing Targeting Dashboard
 
 I built this to turn the UCI Bank Marketing dataset into something my marketing, sales, and account teams can actually use. Upload the data, score prospects, explore segments, and get a concrete recommendation for how and when to contact each person.
+
 https://github.com/mobius29er/bankMarketing/blob/main/bankMarketing.ipynb
+
+
 This repo includes a Streamlit app that trains a model, assigns clusters, builds A–D tiers, and provides a simple calculator so a rep can key in a client profile and get the best channel and timing.
 
 ---
