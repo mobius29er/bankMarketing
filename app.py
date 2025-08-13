@@ -86,16 +86,16 @@ def build_feature_sets(df: pd.DataFrame) -> FeatureSets:
 
 
 @st.cache_resource(show_spinner=False)
-def train_logreg(X: pd.DataFrame, y: pd.Series, preproc: ColumnTransformer) -> Pipeline:
-    pipe = Pipeline([('prep', preproc), ('clf', LogisticRegression(max_iter=1000))])
+def train_logreg(X: pd.DataFrame, y: pd.Series, _preproc: ColumnTransformer) -> Pipeline:
+    pipe = Pipeline([('prep', _preproc), ('clf', LogisticRegression(max_iter=1000))])
     pipe.fit(X, y)
     return pipe
 
 
 @st.cache_resource(show_spinner=False)
-def train_kmeans(X: pd.DataFrame, dense_preproc: ColumnTransformer,
+def train_kmeans(X: pd.DataFrame, _dense_preproc: ColumnTransformer,
                  cand_k: List[int] = [3,4,5]) -> Tuple[KMeans, ColumnTransformer]:
-    Xt = dense_preproc.fit_transform(X)
+    Xt = _dense_preproc.fit_transform(X)
     # convert to dense if sparse leaked through
     try:
         import scipy.sparse as sp
@@ -114,7 +114,7 @@ def train_kmeans(X: pd.DataFrame, dense_preproc: ColumnTransformer,
         sil = silhouette_score(Xt[sample_idx], km.labels_[sample_idx])
         if sil > best_score:
             best_k, best_score, best_model = k, sil, km
-    return best_model, dense_preproc
+    return best_model, _dense_preproc
 
 
 def assign_tiers(proba: pd.Series) -> pd.Series:
